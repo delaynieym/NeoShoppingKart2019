@@ -36,6 +36,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -119,8 +120,10 @@ public class Robot extends TaskRobot {
 		LiftControl liftControl = new LiftControl(this.motors.lifter, this.sensors.liftEncoder, this.sensors.lifterUp,
 				this.sensors.lifterDown, this.settings.liftPidConfig);
 
-		ArmsControl armsControl = new ArmsControl(() -> this.oi.oppInput.pidOff(), this.sensors.arms, this.motors.arms,
-				this.settings.armsHardstop, this.settings.armsFullin, this.settings.armsPidConfig);
+		// ArmsControl armsControl = new ArmsControl(() -> this.oi.oppInput.pidOff(),
+		// this.sensors.arms, this.motors.arms,
+		// this.settings.armsHardstop, this.settings.armsFullin,
+		// this.settings.armsPidConfig);
 
 		this.teleopTasks = new Task[] {
 				new ResetGyro(() -> this.oi.xboxInput.START(), this.sensors.gyro, swerveControl), swerveInput,
@@ -152,13 +155,18 @@ public class Robot extends TaskRobot {
 				new Kicker(() -> this.oi.oppInput.kicker(), this.motors.kicker, this.sensors.kicker,
 						this.settings.kickerUpperbound, this.settings.kickerLowerbound, this.settings.kickerBackpass),
 
-				armsControl, new ResetArms(() -> this.oi.oppInput.armsHardstop(), this.sensors.arms, armsControl),
-				new ArmsTarget(() -> this.oi.oppInput.armsRest(), this.settings.armsFullin, armsControl),
-				new ArmsTarget(() -> this.oi.oppInput.armsPickUp(), this.settings.armsHatch, armsControl),
-				new ArmsTarget(() -> this.oi.oppInput.armsOut(), this.settings.armsFullout, armsControl),
+				// armsControl, new ResetArms(() -> this.oi.oppInput.armsHardstop(),
+				// this.sensors.arms, armsControl),
+				// new ArmsTarget(() -> this.oi.oppInput.armsRest(), this.settings.armsFullin,
+				// armsControl),
+				// new ArmsTarget(() -> this.oi.oppInput.armsPickUp(), this.settings.armsHatch,
+				// armsControl),
+				// new ArmsTarget(() -> this.oi.oppInput.armsOut(), this.settings.armsFullout,
+				// armsControl),
 
-				new DetatchPanel(() -> this.oi.oppInput.lowerLiftBack(), armsControl, liftControl,
-						this.sensors.liftEncoder, 1.5, this.settings.armsFullin),
+				// new DetatchPanel(() -> this.oi.oppInput.lowerLiftBack(), armsControl,
+				// liftControl,
+				// this.sensors.liftEncoder, 1.5, this.settings.armsFullin),
 
 				new UpdateOperatorBoard(this.oi.oppInput), new UpdateMotors(this.motors), new RunEachFrameTask() {
 					private NetworkTable limelight = NetworkTableInstance.getDefault().getTable("limelight");
@@ -170,7 +178,7 @@ public class Robot extends TaskRobot {
 						SmartDashboard.putNumber("kicker encoder", sensors.kicker.getRotation());
 						SmartDashboard.putNumber("kicker motor", motors.kicker.get());
 						SmartDashboard.putNumber("arms encoder", sensors.arms.getRotation());
-						SmartDashboard.putNumber("arms motor", motors.arms.get());
+						// SmartDashboard.putNumber("arms motor", motors.arms.get());
 						SmartDashboard.putNumber("lift encoder", sensors.liftEncoder.getDistance());
 						SmartDashboard.putNumber("lift motor", motors.lifter.get());
 
@@ -187,7 +195,20 @@ public class Robot extends TaskRobot {
 						// SmartDashboard.putNumber("pdp" + i, pewdiepie.getCurrent(i));
 						// }
 					}
-				} };
+				},
+
+				// new RunEachFrameTask() {
+				// Servo servo = new Servo(11);
+
+				// @Override
+				// protected void runEachFrame() {
+				// double x = oi.meme.leftStickX() / 2 + .5;
+				// servo.set(x);
+				// SmartDashboard.putNumber("raw input", oi.meme.leftStickX());
+				// SmartDashboard.putNumber("mapped servo", (servo.get() - .5) * 2);
+				// }
+				// }
+		};
 
 		super.teleopInit();
 
